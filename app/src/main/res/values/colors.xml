@@ -4,4 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="farm_mart_green">#344B1D</color>
     <color name="background">#FCF9F4</color>
+    <color name="font_color_gray">#44483E</color>
+    <color name="placeholder_login">#E5E2DD</color>
+    <color name="grayish">#1C1C19</color>
 </resources>

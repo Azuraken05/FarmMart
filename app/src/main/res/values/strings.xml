@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">FarmMart</string>
+    <string name="no_account_register">No Account? <font color="#344B1D">Register</font></string>
 </resources>

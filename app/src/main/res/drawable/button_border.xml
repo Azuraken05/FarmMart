@@ -1,0 +1,7 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/background" /> <!-- Your farm_mart_green -->
+    <stroke
+        android:width="2dp"
+        android:color="@color/farm_mart_green" /> <!-- Your border color (White) -->
+    <corners android:radius="30dp" />
+</shape>
