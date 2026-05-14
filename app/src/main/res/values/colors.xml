@@ -7,4 +7,6 @@
     <color name="font_color_gray">#44483E</color>
     <color name="placeholder_login">#E5E2DD</color>
     <color name="grayish">#1C1C19</color>
+    <color name="nav_bar_icons">#9C9A96</color>
+    <color name="nav_bar_hover_icon">#4B6332</color>
 </resources>

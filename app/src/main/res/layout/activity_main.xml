@@ -37,7 +37,7 @@
                 android:text="FarmMart"
                 android:textColor="@color/farm_mart_green" />
         </FrameLayout>
-        <!-- Welcome Layout -->
+        <!-- Welcomed Layout -->
         <FrameLayout
             android:layout_marginTop="140dp"
             android:layout_width="match_parent"
@@ -77,6 +77,7 @@
                 android:textColor="@color/font_color_gray"
                 />
             <EditText
+                android:id="@+id/email_address"
                 android:layout_width="290dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_roundborder"
@@ -96,6 +97,7 @@
                 android:layout_marginTop="90dp"
                 />
             <EditText
+                android:id="@+id/password"
                 android:layout_width="290dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edittext_roundborder"
@@ -113,6 +115,7 @@
             android:layout_marginTop="420dp"
             >
             <Button
+                android:id="@+id/SignIn"
                 android:layout_width="290dp"
                 android:layout_height="60dp"
                 android:text="Sign In"
@@ -134,19 +137,21 @@
                 />
         </FrameLayout>
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
-        >
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- REGISTER LAYOUT-->
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@style/ManropeBold"
-            android:text="@string/no_account_register"
-            android:textColor="@color/black"
-            android:layout_gravity="center"
-            />
-    </FrameLayout>
+            android:layout_marginTop="600dp"
+            >
+            <TextView
+                android:id="@+id/registerTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/ManropeBold"
+                android:text="@string/no_account_register"
+                android:textColor="@color/black"
+                android:layout_gravity="center"
+                />
+        </FrameLayout>
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

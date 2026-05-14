@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="HOME"
+        android:icon="@drawable/homebutton"
+        android:id="@+id/home_farmer"
+        />
+
+    <item android:title="PRODUCTS"
+        android:icon="@drawable/shop"
+        android:id="@+id/shop_farmer"
+        />
+
+    <item android:title="ORDERS"
+        android:icon="@drawable/shopping_basket"
+        android:id="@+id/orders_farmer"
+        />
+
+    <item android:title="CHAT"
+        android:icon="@drawable/chat"
+        android:id="@+id/chat_farmer"
+        />
+
+
+    <item android:title="ME"
+        android:icon="@drawable/profile"
+        android:id="@+id/profile_farmer"
+        />
+
+</menu>

@@ -27,4 +27,10 @@
         <item name="android:fontFamily">@font/manrope_bold</item>
     </style>
 
+    <style name="App.CustomIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/nav_bar_hover_icon</item>
+        <!-- Remove android: prefix for app attributes -->
+        <item name="cornerRadius">20dp</item>
+    </style>
+
 </resources>
