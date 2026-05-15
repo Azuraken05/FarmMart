@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FCF9F4">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/header_text_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/tv_greeting_top"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MAGANDANG UMAGA"
+                    android:textSize="11sp"
+                    android:textColor="#828282"
+                    android:letterSpacing="0.1" />
+                <TextView
+                    android:id="@+id/tv_user_name_home"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Mateo Reyes"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#141414" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:text="FarmMart"
+                    android:textColor="#435334"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btn_notification"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/notification"
+                    android:contentDescription="Notifications" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/et_search_home"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edittext_roundborder"
+            android:drawableStart="@drawable/search"
+            android:drawablePadding="12dp"
+            android:hint="Search fresh produce..."
+            android:paddingHorizontal="15dp"
+            android:textSize="14sp"
+            android:inputType="text" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Browse Categories"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#141414" />
+            <TextView
+                android:id="@+id/tv_view_all_categories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="View All"
+                android:textColor="#435334"
+                android:textSize="13sp" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="15dp"
+            android:weightSum="4">
+
+            <LinearLayout android:id="@+id/cat_veg" style="@style/HomeCategoryStyle">
+                <ImageView style="@style/HomeCategoryIcon" android:src="@drawable/vegetables" />
+                <TextView style="@style/HomeCategoryText" android:text="VEGETABLES" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/cat_fruit" style="@style/HomeCategoryStyle">
+                <ImageView style="@style/HomeCategoryIcon" android:src="@drawable/fruits" />
+                <TextView style="@style/HomeCategoryText" android:text="FRUITS" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/cat_rice" style="@style/HomeCategoryStyle">
+                <ImageView style="@style/HomeCategoryIcon" android:src="@drawable/rice" />
+                <TextView style="@style/HomeCategoryText" android:text="RICE" />
+            </LinearLayout>
+
+            <LinearLayout android:id="@+id/cat_egg" style="@style/HomeCategoryStyle">
+                <ImageView style="@style/HomeCategoryIcon" android:src="@drawable/egg" />
+                <TextView style="@style/HomeCategoryText" android:text="EGG" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Our Farmers"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_farmer_featured"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="2dp">
+            <View android:layout_width="match_parent" android:layout_height="match_parent" android:background="#E8E4D9" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:text="Farmer Banner Placement"/>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Today's Fresh Picks"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <GridLayout
+            android:id="@+id/grid_products"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:useDefaultMargins="true"
+            android:alignmentMode="alignMargins"
+            android:layout_marginTop="10dp">
+        </GridLayout>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
