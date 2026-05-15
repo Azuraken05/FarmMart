@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button signInButton;
     EditText emailEditText, passwordEditText;
-    TextView registerTextView; // Added for the clickable text
+    TextView registerTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        // Handle system bars padding for Edge-to-Edge
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -45,31 +46,30 @@ public class MainActivity extends AppCompatActivity {
         signInButton = findViewById(R.id.SignIn);
         emailEditText = findViewById(R.id.email_address);
         passwordEditText = findViewById(R.id.password);
-        registerTextView = findViewById(R.id.registerTextView); // Make sure this ID matches your XML
+        registerTextView = findViewById(R.id.registerTextView);
 
-        // --- CLICKABLE REGISTER LOGIC ---
+        // --- 1. CLICKABLE REGISTER LOGIC ---
         String fullText = getString(R.string.no_account_register);
         SpannableString spannableString = new SpannableString(fullText);
 
         int start = fullText.indexOf("Register");
         int end = start + "Register".length();
 
-        if (start != -1) { // Check to ensure "Register" exists in the string
+        if (start != -1) {
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(@NonNull View widget) {
-                    // Navigate to your registration screen
-                    // Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-                    // startActivity(intent);
-                    Toast.makeText(MainActivity.this, "Opening Registration...", Toast.LENGTH_SHORT).show();
+                    // Navigate to Register Activity
+                    Intent intent = new Intent(MainActivity.this, register.class);
+                    startActivity(intent);
                 }
 
                 @Override
                 public void updateDrawState(@NonNull TextPaint ds) {
                     super.updateDrawState(ds);
-                    // Use your custom green color for "Register"
+                    // Color the "Register" text with your brand green
                     ds.setColor(ContextCompat.getColor(MainActivity.this, R.color.farm_mart_green));
-                    ds.setUnderlineText(false); // Clean look without underline
+                    ds.setUnderlineText(false);
                 }
             };
 
@@ -79,22 +79,44 @@ public class MainActivity extends AppCompatActivity {
             registerTextView.setText(spannableString);
             registerTextView.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        // --------------------------------
 
+        // --- 2. LOGIN LOGIC (ADMIN + DATABASE) ---
         signInButton.setOnClickListener(v -> {
-            String email = emailEditText.getText().toString().trim();
-            String password = passwordEditText.getText().toString().trim();
+            String emailInput = emailEditText.getText().toString().trim();
+            String passwordInput = passwordEditText.getText().toString().trim();
 
-            if (email.equals("user") && password.equals("1234")) {
-                Intent intent = new Intent(MainActivity.this, Dashboard.class);
-                startActivity(intent);
+            if (emailInput.isEmpty() || passwordInput.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // A. CHECK HARDCODED ADMIN ACCOUNTS
+            if (emailInput.equals("user") && passwordInput.equals("1234")) {
+                startActivity(new Intent(MainActivity.this, Dashboard.class));
                 finish();
-            } else if (email.equals("farmer") && password.equals("1234")) {
-                Intent intent = new Intent(MainActivity.this, farmer_dashboard.class);
-                startActivity(intent);
+            }
+            else if (emailInput.equals("farmer") && passwordInput.equals("1234")) {
+                startActivity(new Intent(MainActivity.this, farmer_dashboard.class));
                 finish();
-            } else {
-                Toast.makeText(MainActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+            }
+
+            // B. CHECK LOCAL ROOM DATABASE
+            else {
+                // Query the database
+                User loggedInUser = AppDatabase.getInstance(this).userDao().login(emailInput, passwordInput);
+
+                if (loggedInUser != null) {
+                    // Direct based on the role stored in the database
+                    if (loggedInUser.role.equals("Farmer")) {
+                        startActivity(new Intent(MainActivity.this, farmer_dashboard.class));
+                    } else {
+                        startActivity(new Intent(MainActivity.this, Dashboard.class));
+                    }
+                    finish();
+                } else {
+                    // Fail if no admin or database match
+                    Toast.makeText(MainActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
