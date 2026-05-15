@@ -7,20 +7,24 @@ import androidx.room.PrimaryKey;
 public class Product {
     @PrimaryKey(autoGenerate = true)
     public int id;
+
     public String name;
     public String farm;
     public String price;
     public String category;
     public int stock;
-    public String imagePath; // ✅ Changed from int to String to store Image URIs
+    public String imagePath;
+    public String description; // ✅ Added description field
 
-    public Product(String name, String farm, String price, String category, int stock, String imagePath) {
+    // Constructor
+    public Product(String name, String farm, String price, String category, int stock, String imagePath, String description) {
         this.name = name;
         this.farm = farm;
         this.price = price;
         this.category = category;
         this.stock = stock;
         this.imagePath = imagePath;
+        this.description = description;
     }
 
     // Getter for the name

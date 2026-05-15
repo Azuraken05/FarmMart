@@ -77,13 +77,16 @@ public class HomepageUserFragment extends Fragment {
             params.setMargins(10, 10, 10, 10);
             cardView.setLayoutParams(params);
 
+            // Binding Data
             ((TextView) cardView.findViewById(R.id.tv_product_name)).setText(product.name);
             ((TextView) cardView.findViewById(R.id.tv_product_farm)).setText(product.farm);
             ((TextView) cardView.findViewById(R.id.tv_product_price)).setText(product.price);
 
-            ImageView productImg = cardView.findViewById(R.id.img_product);
+            // ✅ Bind Description
+            TextView tvDesc = cardView.findViewById(R.id.tv_product_description);
+            tvDesc.setText(product.description != null ? product.description : "No description available.");
 
-            // ✅ SAFE IMAGE LOADING
+            ImageView productImg = cardView.findViewById(R.id.img_product);
             if (product.imagePath != null && !product.imagePath.isEmpty()) {
                 try {
                     productImg.setImageURI(Uri.parse(product.imagePath));

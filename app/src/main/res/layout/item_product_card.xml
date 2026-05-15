@@ -6,82 +6,95 @@
     android:layout_margin="8dp"
     app:cardCornerRadius="15dp"
     app:cardElevation="4dp"
-    app:cardBackgroundColor="@color/white"> <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp">
+    app:cardBackgroundColor="@color/white">
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <ImageView
-            android:id="@+id/img_product"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/logo" />
+            android:layout_height="120dp">
 
-        <ImageView
-            android:id="@+id/btn_favorite"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="8dp"
-            android:src="@drawable/favorite"
-            app:tint="#828282" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/img_product"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/logo"
+                android:clipToOutline="true" />
 
-    <TextView
-        android:id="@+id/tv_product_farm"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="LOCAL FARM"
-        android:textColor="#828282"
-        android:textSize="10sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tv_product_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Product Name"
-        android:textColor="#141414"
-        android:textSize="14sp"
-        android:textStyle="bold" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+            <ImageView
+                android:id="@+id/btn_favorite"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="8dp"
+                android:src="@drawable/favorite"
+                app:tint="#828282" />
+        </RelativeLayout>
 
         <TextView
-            android:id="@+id/tv_product_price"
+            android:id="@+id/tv_product_farm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="₱0.00"
-            android:textColor="#435334"
+            android:layout_marginTop="8dp"
+            android:text="LOCAL FARM"
+            android:textColor="#828282"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Product Name"
+            android:textColor="#141414"
             android:textSize="14sp"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tv_product_description"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/tv_product_price"
-            android:layout_alignBaseline="@id/tv_product_price"
-            android:text=" /kg"
+            android:text="Freshly harvested from the farm..."
             android:textColor="#828282"
-            android:textSize="10sp" />
+            android:textSize="10sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
-        <ImageView
-            android:id="@+id/btn_add_to_cart"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/add_circle"
-            app:tint="#435334" />
-    </RelativeLayout>
-</LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp">
+
+            <TextView
+                android:id="@+id/tv_product_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₱0.00"
+                android:textColor="#435334"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@id/tv_product_price"
+                android:layout_alignBaseline="@id/tv_product_price"
+                android:text=" /kg"
+                android:textColor="#828282"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/btn_add_to_cart"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/add_circle"
+                app:tint="#435334" />
+        </RelativeLayout>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

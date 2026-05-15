@@ -23,4 +23,8 @@ public interface ProductDao {
 
     @Query("SELECT * FROM products WHERE category = :cat")
     List<Product> getProductsByCategory(String cat);
+
+    // ✅ Added this to support the Edit functionality
+    @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
+    Product getProductById(int id);
 }

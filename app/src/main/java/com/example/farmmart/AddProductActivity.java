@@ -1,5 +1,6 @@
 package com.example.farmmart;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,67 +16,111 @@ import androidx.appcompat.app.AppCompatActivity;
 public class AddProductActivity extends AppCompatActivity {
 
     private String selectedImagePath = "";
+    private int productId = -1; // -1 means New Product
     private ImageView imgPreview;
+    private EditText etName, etPrice, etStock, etDescription;
+    private Spinner spinnerCat;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
 
-        // Initialize Views
-        EditText etName = findViewById(R.id.et_product_name);
-        EditText etPrice = findViewById(R.id.et_product_price);
-        EditText etStock = findViewById(R.id.et_product_stock);
-        Spinner spinnerCat = findViewById(R.id.spinner_category);
-        Button btnSave = findViewById(R.id.btn_save_product);
+        etName = findViewById(R.id.et_product_name);
+        etPrice = findViewById(R.id.et_product_price);
+        etStock = findViewById(R.id.et_product_stock);
+        etDescription = findViewById(R.id.et_product_description);
+        spinnerCat = findViewById(R.id.spinner_category);
         imgPreview = findViewById(R.id.img_select_product);
+        Button btnSave = findViewById(R.id.btn_save_product);
 
-        // ✅ FIXED: Using OpenDocument to allow persistable permissions
+        // ✅ Check if we are editing
+        productId = getIntent().getIntExtra("PRODUCT_ID", -1);
+        if (productId != -1) {
+            btnSave.setText("UPDATE PRODUCT");
+            loadProductForEdit();
+        }
+
         ActivityResultLauncher<String[]> getContent = registerForActivityResult(
                 new ActivityResultContracts.OpenDocument(),
                 uri -> {
                     if (uri != null) {
-                        // ✅ TAKE PERMANENT PERMISSION
-                        final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
-                        getContentResolver().takePersistableUriPermission(uri, takeFlags);
-
+                        getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
                         imgPreview.setImageURI(uri);
                         selectedImagePath = uri.toString();
                     }
                 }
         );
 
-        // ✅ Open Document picker for images
         imgPreview.setOnClickListener(v -> getContent.launch(new String[]{"image/*"}));
+        btnSave.setOnClickListener(v -> saveProduct());
+    }
 
-        btnSave.setOnClickListener(v -> {
-            String nameInput = etName.getText().toString().trim();
-            String priceInput = etPrice.getText().toString().trim();
-            String stockInput = etStock.getText().toString().trim();
-            String selectedCategory = spinnerCat.getSelectedItem().toString();
-
-            if (nameInput.isEmpty() || priceInput.isEmpty() || stockInput.isEmpty()) {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
-                return;
+    private void loadProductForEdit() {
+        new Thread(() -> {
+            Product p = AppDatabase.getInstance(this).productDao().getProductById(productId);
+            if (p != null) {
+                runOnUiThread(() -> {
+                    etName.setText(p.name);
+                    etPrice.setText(p.price.replace("₱", ""));
+                    etStock.setText(String.valueOf(p.stock));
+                    etDescription.setText(p.description);
+                    selectedImagePath = p.imagePath;
+                    if (p.imagePath != null && !p.imagePath.isEmpty()) {
+                        try {
+                            imgPreview.setImageURI(Uri.parse(p.imagePath));
+                        } catch (Exception e) {
+                            imgPreview.setImageResource(R.drawable.logo);
+                        }
+                    }
+                });
             }
+        }).start();
+    }
 
-            new Thread(() -> {
-                Product newProduct = new Product(
-                        nameInput,
+    private void saveProduct() {
+        // ✅ Get strings and trim spaces
+        String name = etName.getText().toString().trim();
+        String priceText = etPrice.getText().toString().trim();
+        String stockText = etStock.getText().toString().trim();
+        String desc = etDescription.getText().toString().trim();
+
+        // ✅ VALIDATION: Prevents NumberFormatException crash if fields are empty
+        if (name.isEmpty() || priceText.isEmpty() || stockText.isEmpty()) {
+            Toast.makeText(this, "Please fill in Name, Price, and Stock", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new Thread(() -> {
+            try {
+                // ✅ Safe to parse now because we checked if they were empty
+                int stockValue = Integer.parseInt(stockText);
+
+                Product p = new Product(
+                        name,
                         "My Farm",
-                        "₱" + priceInput,
-                        selectedCategory,
-                        Integer.parseInt(stockInput),
-                        selectedImagePath
+                        "₱" + priceText,
+                        spinnerCat.getSelectedItem().toString(),
+                        stockValue,
+                        selectedImagePath,
+                        desc
                 );
 
-                AppDatabase.getInstance(getApplicationContext()).productDao().insertProduct(newProduct);
+                if (productId != -1) {
+                    p.id = productId;
+                    AppDatabase.getInstance(this).productDao().updateProduct(p);
+                } else {
+                    AppDatabase.getInstance(this).productDao().insertProduct(p);
+                }
 
                 runOnUiThread(() -> {
-                    Toast.makeText(this, "Product listed successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Market Updated!", Toast.LENGTH_SHORT).show();
                     finish();
                 });
-            }).start();
-        });
+            } catch (NumberFormatException e) {
+                runOnUiThread(() -> Toast.makeText(this, "Invalid number format in Price or Stock", Toast.LENGTH_SHORT).show());
+            }
+        }).start();
     }
 }
