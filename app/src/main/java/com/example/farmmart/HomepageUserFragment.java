@@ -1,5 +1,6 @@
 package com.example.farmmart;
 
+import android.content.Intent; // ✅ Added this import
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -82,7 +83,7 @@ public class HomepageUserFragment extends Fragment {
             ((TextView) cardView.findViewById(R.id.tv_product_farm)).setText(product.farm);
             ((TextView) cardView.findViewById(R.id.tv_product_price)).setText(product.price);
 
-            // ✅ Bind Description
+            // Bind Description
             TextView tvDesc = cardView.findViewById(R.id.tv_product_description);
             tvDesc.setText(product.description != null ? product.description : "No description available.");
 
@@ -96,6 +97,13 @@ public class HomepageUserFragment extends Fragment {
             } else {
                 productImg.setImageResource(R.drawable.logo);
             }
+
+            // ✅ CLICK LISTENER: Opens the detail screen for this specific product
+            cardView.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), activity_product_detail.class);
+                intent.putExtra("PRODUCT_ID", product.id); // Pass the ID to fetch details in next screen
+                startActivity(intent);
+            });
 
             productGrid.addView(cardView);
         }
