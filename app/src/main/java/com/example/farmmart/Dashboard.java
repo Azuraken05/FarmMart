@@ -3,6 +3,7 @@ package com.example.farmmart;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Dashboard extends AppCompatActivity {
@@ -10,48 +11,55 @@ public class Dashboard extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // This forces the system window to be transparent so your rounded corners look clean
+        // Clean navigation bar color for your UI
         getWindow().setNavigationBarColor(android.graphics.Color.parseColor("#FCF9F4"));
         setContentView(R.layout.activity_dashboard);
 
-        // ✅ Matches the ID in your activity_dashboard.xml
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView2);
 
-        // 1. DEFAULT START: Load Homepage when the app opens
+        // 1. DEFAULT START
         if (savedInstanceState == null) {
-            loadFragment(new HomepageUserFragment());
+            loadFragment(new HomepageUserFragment(), false);
             bottomNav.setSelectedItemId(R.id.home_user);
         }
 
-        // 2. SWITCHING LOGIC: Listen for clicks on the Bottom Nav
+        // 2. SWITCHING LOGIC
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
             if (itemId == R.id.home_user) {
                 selectedFragment = new HomepageUserFragment();
+            } else if (itemId == R.id.cart_user) {
+                // ✅ Now loads your new Cart Fragment
+                selectedFragment = new CartFragmentUser();
             } else if (itemId == R.id.profile_user) {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.shop_user) {
-                // selectedFragment = new ShopFragment(); // Uncomment when ready
+                // selectedFragment = new ShopFragment();
             } else if (itemId == R.id.chat_user) {
-                // selectedFragment = new ChatFragment(); // Uncomment when ready
-            } else if (itemId == R.id.cart_user) {
-                // selectedFragment = new CartFragment(); // Uncomment when ready
+                // selectedFragment = new ChatFragment();
             }
 
             if (selectedFragment != null) {
-                loadFragment(selectedFragment);
+                // We pass 'true' for the cart so the back button works
+                boolean addToBackStack = (itemId == R.id.cart_user);
+                loadFragment(selectedFragment, addToBackStack);
                 return true;
             }
             return false;
         });
     }
 
-    // Helper method to keep the code clean
-    private void loadFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .commit();
+    private void loadFragment(Fragment fragment, boolean addToBackStack) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+
+        // ✅ This allows the back button to return to the previous fragment
+        if (addToBackStack) {
+            transaction.addToBackStack(null);
+        }
+
+        transaction.commit();
     }
 }

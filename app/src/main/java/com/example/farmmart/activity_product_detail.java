@@ -13,6 +13,7 @@ public class activity_product_detail extends AppCompatActivity {
     private int quantity = 1;
     private TextView tvQty;
     private AppDatabase db;
+    private String currentImagePath = ""; // ✅ Stores the path to pass to the Cart
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +30,11 @@ public class activity_product_detail extends AppCompatActivity {
         Button btnPlus = findViewById(R.id.btn_plus);
         Button btnMinus = findViewById(R.id.btn_minus);
         Button btnAddToCart = findViewById(R.id.btn_add_to_cart_large);
-
-        // ✅ Initialize Back Button
         ImageView btnBack = findViewById(R.id.btn_back_detail);
 
         db = AppDatabase.getInstance(this);
 
-        // 2. Get Product ID passed from HomepageUserFragment
+        // 2. Get Product ID from Intent
         int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
 
         if (productId != -1) {
@@ -44,18 +43,16 @@ public class activity_product_detail extends AppCompatActivity {
             Toast.makeText(this, "Error: Product not found", Toast.LENGTH_SHORT).show();
         }
 
-        // ✅ 3. Back Button Logic
-        btnBack.setOnClickListener(v -> {
-            finish(); // Closes this screen and returns to the previous one
-        });
+        // 3. Back Button Logic
+        btnBack.setOnClickListener(v -> finish());
 
-        // 4. Increment Quantity Logic
+        // 4. Quantity Increment
         btnPlus.setOnClickListener(v -> {
             quantity++;
             tvQty.setText(String.valueOf(quantity));
         });
 
-        // 5. Decrement Quantity Logic (Minimum is 1)
+        // 5. Quantity Decrement
         btnMinus.setOnClickListener(v -> {
             if (quantity > 1) {
                 quantity--;
@@ -63,10 +60,30 @@ public class activity_product_detail extends AppCompatActivity {
             }
         });
 
-        // 6. Add to Cart Logic
+        // 6. ✅ Add to Cart Logic (Saving to Room Database)
         btnAddToCart.setOnClickListener(v -> {
-            String message = "Added " + quantity + " " + tvName.getText().toString() + " to cart";
-            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+            String pName = tvName.getText().toString();
+            String pPrice = tvPrice.getText().toString();
+
+            new Thread(() -> {
+                // Create a new CartItem object with current details
+                CartItem cartItem = new CartItem(
+                        productId,
+                        pName,
+                        pPrice,
+                        currentImagePath, // Passed from the loaded product
+                        quantity,
+                        true // Items are selected for checkout by default
+                );
+
+                // Perform the Database Insert
+                db.cartDao().addToCart(cartItem);
+
+                // Show success message on the UI Thread
+                runOnUiThread(() -> {
+                    Toast.makeText(this, "Added " + quantity + " " + pName + " to cart", Toast.LENGTH_SHORT).show();
+                });
+            }).start();
         });
     }
 
@@ -75,11 +92,15 @@ public class activity_product_detail extends AppCompatActivity {
             Product p = db.productDao().getProductById(id);
 
             if (p != null) {
+                // ✅ Capture the image path so it can be saved to the Cart table later
+                currentImagePath = p.imagePath;
+
                 runOnUiThread(() -> {
                     name.setText(p.name);
                     price.setText(p.price);
                     desc.setText(p.description != null ? p.description : "No description available.");
 
+                    // Handle Image Loading
                     if (p.imagePath != null && !p.imagePath.isEmpty()) {
                         try {
                             img.setImageURI(Uri.parse(p.imagePath));
