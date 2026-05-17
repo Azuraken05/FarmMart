@@ -28,6 +28,11 @@
             android:name=".Dashboard"
             android:exported="true" />
         <activity
+            android:name=".CheckoutActivity"
+            android:exported="false" />
+
+
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

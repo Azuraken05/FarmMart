@@ -30,7 +30,11 @@ public interface CartDao {
     @Query("DELETE FROM cart_items WHERE cartId = :id")
     void deleteById(int id);
 
-    // ✅ Used to calculate the total price of only SELECTED items
+    // ✅ Used to fetch only items the user wants to buy (for Order Summary)
     @Query("SELECT * FROM cart_items WHERE isSelected = 1")
     List<CartItem> getSelectedItems();
+
+    // ✅ NEW: Used when "Place Order" is clicked to clear the checkout items
+    @Query("DELETE FROM cart_items WHERE isSelected = 1")
+    void deleteSelectedItems();
 }

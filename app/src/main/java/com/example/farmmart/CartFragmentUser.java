@@ -1,5 +1,6 @@
 package com.example.farmmart;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +30,6 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // ✅ Matches your layout filename: fragment_cart_user.xml
         View view = inflater.inflate(R.layout.fragment_cart_user, container, false);
 
         // 1. Initialize Database and Views
@@ -46,24 +46,33 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
         // 2. Load the Initial Data
         loadCartItems();
 
-
-        // ✅ "Select All" Checkbox Logic: Toggles every item in the DB
+        // ✅ "Select All" Checkbox Logic
         cbSelectAll.setOnClickListener(v -> {
             boolean isChecked = cbSelectAll.isChecked();
             new Thread(() -> {
                 db.cartDao().setAllSelected(isChecked);
-                // Reload items to sync the UI with the DB state
                 loadCartItems();
             }).start();
         });
 
-        // ✅ Checkout Button Logic
+        // ✅ Updated: Checkout Button Logic (Navigates to CheckoutActivity)
         btnCheckout.setOnClickListener(v -> {
-            if (cartList != null && !cartList.isEmpty()) {
-                // Here you would navigate to your Order Confirmation screen
-                Toast.makeText(getContext(), "Proceeding to Checkout...", Toast.LENGTH_SHORT).show();
+            boolean hasSelection = false;
+            if (cartList != null) {
+                for (CartItem item : cartList) {
+                    if (item.isSelected) {
+                        hasSelection = true;
+                        break;
+                    }
+                }
+            }
+
+            if (hasSelection) {
+                // Navigate to the Checkout screen
+                Intent intent = new Intent(getContext(), CheckoutActivity.class);
+                startActivity(intent);
             } else {
-                Toast.makeText(getContext(), "Your cart is empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Please select items to checkout", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -72,11 +81,9 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
 
     private void loadCartItems() {
         new Thread(() -> {
-            // Fetch all items currently in the cart_items table
             cartList = db.cartDao().getAllCartItems();
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    // Re-attach adapter with the new list
                     adapter = new CartAdapter(getContext(), cartList, this);
                     recyclerView.setAdapter(adapter);
                     calculateTotal();
@@ -85,7 +92,6 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
         }).start();
     }
 
-    // ✅ Triggered by CartAdapter when quantity or individual checkbox changes
     @Override
     public void onDataChanged() {
         calculateTotal();
@@ -99,7 +105,6 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
             for (CartItem item : cartList) {
                 if (item.isSelected) {
                     try {
-                        // Sanitizes string price like "₱20.00" or "₱1,200"
                         String cleanPrice = item.productPrice.replace("₱", "").replace(",", "").trim();
                         double price = Double.parseDouble(cleanPrice);
                         total += (price * item.quantity);
@@ -116,16 +121,13 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
 
         if (getActivity() != null) {
             getActivity().runOnUiThread(() -> {
-                // Updates UI elements to match your reference design
                 tvTotalPrice.setText("₱" + (int) finalTotal);
                 tvItemCount.setText(cartList.size() + " ITEMS");
                 tvSelectedLabel.setText("Selected (" + finalCount + " items)");
                 btnCheckout.setText("Checkout (" + finalCount + ")");
 
-                // Handle the Select All text/state automatically
                 cbSelectAll.setText("Select All (" + cartList.size() + ")");
 
-                // Logic to sync "Select All" checkbox state
                 if (finalCount == 0) {
                     cbSelectAll.setChecked(false);
                 } else if (finalCount == cartList.size()) {
@@ -138,7 +140,6 @@ public class CartFragmentUser extends Fragment implements CartAdapter.OnCartChan
     @Override
     public void onResume() {
         super.onResume();
-        // Refresh items whenever the user navigates back to the Cart
         loadCartItems();
     }
 }

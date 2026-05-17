@@ -27,4 +27,14 @@ public interface ProductDao {
     // ✅ Added this to support the Edit functionality
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
     Product getProductById(int id);
+
+    @Query("SELECT * FROM products ORDER BY id DESC")
+    List<Product> getAllProductsLatest();
+
+    @Query("SELECT * FROM products ORDER BY CAST(REPLACE(REPLACE(price, '₱', ''), ',', '') AS REAL) DESC")
+    List<Product> getAllProductsByPriceHigh();
+
+    @Query("SELECT * FROM products ORDER BY CAST(REPLACE(price, '₱', '') AS REAL) ASC")
+    List<Product> getAllProductsByPriceLow();
+
 }

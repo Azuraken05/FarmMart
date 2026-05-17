@@ -31,19 +31,19 @@ public class Dashboard extends AppCompatActivity {
             if (itemId == R.id.home_user) {
                 selectedFragment = new HomepageUserFragment();
             } else if (itemId == R.id.cart_user) {
-                // ✅ Now loads your new Cart Fragment
                 selectedFragment = new CartFragmentUser();
             } else if (itemId == R.id.profile_user) {
                 selectedFragment = new ProfileFragment();
             } else if (itemId == R.id.shop_user) {
-                // selectedFragment = new ShopFragment();
+                // ✅ Now loads your new Shop Fragment
+                selectedFragment = new fragment_shop();
             } else if (itemId == R.id.chat_user) {
                 // selectedFragment = new ChatFragment();
             }
 
             if (selectedFragment != null) {
-                // We pass 'true' for the cart so the back button works
-                boolean addToBackStack = (itemId == R.id.cart_user);
+                // ✅ Back button will now work for Shop and Cart
+                boolean addToBackStack = (itemId == R.id.cart_user || itemId == R.id.shop_user);
                 loadFragment(selectedFragment, addToBackStack);
                 return true;
             }
@@ -55,7 +55,6 @@ public class Dashboard extends AppCompatActivity {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
 
-        // ✅ This allows the back button to return to the previous fragment
         if (addToBackStack) {
             transaction.addToBackStack(null);
         }

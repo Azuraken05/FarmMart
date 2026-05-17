@@ -1,5 +1,6 @@
 package com.example.farmmart;
 
+import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,15 +13,18 @@ import java.util.List;
 
 public class FarmerProductAdapter extends RecyclerView.Adapter<FarmerProductAdapter.ViewHolder> {
 
+    private Context context;
     private List<Product> productList;
     private OnProductListener listener;
 
+    // ✅ 1. Interface for handling clicks
     public interface OnProductListener {
-        void onDelete(Product product);
-        void onEdit(Product product);
+        void onProductClick(Product product);
     }
 
-    public FarmerProductAdapter(List<Product> productList, OnProductListener listener) {
+    // ✅ 2. Constructor accepting Context, List, and Listener
+    public FarmerProductAdapter(Context context, List<Product> productList, OnProductListener listener) {
+        this.context = context;
         this.productList = productList;
         this.listener = listener;
     }
@@ -28,49 +32,51 @@ public class FarmerProductAdapter extends RecyclerView.Adapter<FarmerProductAdap
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_farmer_product, parent, false);
+        // Inflates the card layout for each item
+        View view = LayoutInflater.from(context).inflate(R.layout.item_product_card, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Product product = productList.get(position);
-        holder.name.setText(product.name);
-        holder.category.setText(product.category);
-        holder.price.setText(product.price);
 
-        // ✅ SHOW UPLOADED IMAGE
+        // Bind data to views
+        holder.tvName.setText(product.name);
+        holder.tvPrice.setText(product.price);
+
+        // Load image from URI if it exists
         if (product.imagePath != null && !product.imagePath.isEmpty()) {
             try {
-                holder.productImg.setImageURI(Uri.parse(product.imagePath));
+                holder.imgProduct.setImageURI(Uri.parse(product.imagePath));
             } catch (Exception e) {
-                holder.productImg.setImageResource(R.drawable.logo);
+                // Fallback icon if the image URI is invalid
+                holder.imgProduct.setImageResource(R.drawable.logo);
             }
-        } else {
-            holder.productImg.setImageResource(R.drawable.logo);
         }
 
-        holder.btnDelete.setOnClickListener(v -> listener.onDelete(product));
-        holder.btnEdit.setOnClickListener(v -> listener.onEdit(product));
+        // ✅ 3. Trigger the listener when the entire card is clicked
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onProductClick(product);
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return productList.size();
+        return productList != null ? productList.size() : 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name, category, price;
-        ImageView btnEdit, btnDelete, productImg;
+        TextView tvName, tvPrice;
+        ImageView imgProduct;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.tv_farmer_prod_name);
-            category = itemView.findViewById(R.id.tv_farmer_prod_cat);
-            price = itemView.findViewById(R.id.tv_farmer_prod_price);
-            btnEdit = itemView.findViewById(R.id.btn_edit_prod);
-            btnDelete = itemView.findViewById(R.id.btn_delete_prod);
-            productImg = itemView.findViewById(R.id.img_farmer_prod); // ✅ Linked the ImageView
+            tvName = itemView.findViewById(R.id.tv_product_name);
+            tvPrice = itemView.findViewById(R.id.tv_product_price);
+            imgProduct = itemView.findViewById(R.id.img_product);
         }
     }
 }

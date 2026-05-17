@@ -46,19 +46,20 @@ public class fragment_farmer_products extends Fragment {
             List<Product> products = db.productDao().getAllProducts();
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    FarmerProductAdapter adapter = new FarmerProductAdapter(products, new FarmerProductAdapter.OnProductListener() {
-                        @Override
-                        public void onDelete(Product product) {
-                            deleteProductFromDb(product);
-                        }
+                    // ✅ FIXED: Added getContext() as the first argument
+                    // ✅ FIXED: Updated listener implementation to match the new Adapter interface
+                    FarmerProductAdapter adapter = new FarmerProductAdapter(getContext(), products, new FarmerProductAdapter.OnProductListener() {
 
                         @Override
-                        public void onEdit(Product product) {
-                            // ✅ FIXED: Now passes the ID to open the Edit screen
+                        public void onProductClick(Product product) {
+                            // This replaces the old onEdit if you want simple click-to-edit logic
                             Intent intent = new Intent(getActivity(), AddProductActivity.class);
                             intent.putExtra("PRODUCT_ID", product.id);
                             startActivity(intent);
                         }
+
+                        // Note: If you want onDelete/onEdit buttons specifically,
+                        // you must add those methods back into the FarmerProductAdapter.OnProductListener interface first.
                     });
                     rvFarmerProducts.setAdapter(adapter);
                 });
