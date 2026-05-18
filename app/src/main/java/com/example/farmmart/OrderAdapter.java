@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
@@ -34,21 +35,14 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         OrderItem order = orderList.get(position);
 
         holder.tvProductName.setText(order.productName);
-
-        // ✅ FIX: Removed manual "₱" to prevent double peso sign (₱₱)
-        // Since your database already stores it as "₱4", this will now show correctly.
         holder.tvPrice.setText(order.productPrice);
-
         holder.tvStatus.setText(order.status);
 
         // ✅ Robust Price Calculation
         try {
-            // Clean the string from currency symbols and commas to prevent crashes
             String cleanPrice = order.productPrice.replace("₱", "").replace(",", "").trim();
             double priceValue = Double.parseDouble(cleanPrice);
             double total = priceValue * order.quantity;
-
-            // We keep the "₱" here because 'total' is a raw number (double)
             holder.tvTotalSummary.setText("TOTAL " + order.quantity + " ITEM: ₱" + String.format("%.2f", total));
         } catch (Exception e) {
             holder.tvTotalSummary.setText("TOTAL " + order.quantity + " ITEM: " + order.productPrice);
@@ -65,9 +59,42 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.imgProduct.setImageResource(R.drawable.logo);
         }
 
-        holder.btnViewDetails.setOnClickListener(v -> {
-            // Future logic for shipping details
-        });
+        // ✅ Button Logic based on Status
+        if ("To Receive".equals(order.status)) {
+            holder.btnViewDetails.setText("ORDER RECEIVED");
+            holder.btnViewDetails.setOnClickListener(v -> {
+                updateStatusToCompleted(order, position);
+            });
+        } else if ("To Ship".equals(order.status)) {
+            holder.btnViewDetails.setText("View Shipping Details");
+            holder.btnViewDetails.setOnClickListener(v -> {
+                Toast.makeText(context, "Farmer is preparing your order", Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // Completed state
+            holder.btnViewDetails.setText("Order Completed");
+            holder.btnViewDetails.setEnabled(false);
+            holder.btnViewDetails.setAlpha(0.5f); // Make it look disabled
+        }
+    }
+
+    // ✅ Helper method to update database and refresh list
+    private void updateStatusToCompleted(OrderItem order, int position) {
+        new Thread(() -> {
+            AppDatabase db = AppDatabase.getInstance(context);
+            // Update status in database
+            db.orderDao().updateOrderStatus(order.orderId, "Completed");
+
+            // Update the UI
+            if (context instanceof MyPurchasesActivity) {
+                ((MyPurchasesActivity) context).runOnUiThread(() -> {
+                    orderList.remove(position);
+                    notifyItemRemoved(position);
+                    notifyItemRangeChanged(position, orderList.size());
+                    Toast.makeText(context, "Order marked as Received!", Toast.LENGTH_SHORT).show();
+                });
+            }
+        }).start();
     }
 
     @Override

@@ -18,13 +18,22 @@ public interface ProductDao {
     @Delete
     void deleteProduct(Product product);
 
+    /**
+     * ✅ Farmer View: Returns only the products belonging to the logged-in farmer.
+     * This prevents Farmers from seeing or editing each other's items.
+     */
+    @Query("SELECT * FROM products WHERE farmerId = :farmerId ORDER BY id DESC")
+    List<Product> getProductsByFarmer(int farmerId);
+
+    // --- General Queries for the Shop (Customer View) ---
+    // Customers can see products from ALL farmers combined.
+
     @Query("SELECT * FROM products ORDER BY id DESC")
     List<Product> getAllProducts();
 
     @Query("SELECT * FROM products WHERE category = :cat")
     List<Product> getProductsByCategory(String cat);
 
-    // ✅ Added this to support the Edit functionality
     @Query("SELECT * FROM products WHERE id = :id LIMIT 1")
     Product getProductById(int id);
 
@@ -34,7 +43,6 @@ public interface ProductDao {
     @Query("SELECT * FROM products ORDER BY CAST(REPLACE(REPLACE(price, '₱', ''), ',', '') AS REAL) DESC")
     List<Product> getAllProductsByPriceHigh();
 
-    @Query("SELECT * FROM products ORDER BY CAST(REPLACE(price, '₱', '') AS REAL) ASC")
+    @Query("SELECT * FROM products ORDER BY CAST(REPLACE(REPLACE(price, '₱', ''), ',', '') AS REAL) ASC")
     List<Product> getAllProductsByPriceLow();
-
 }

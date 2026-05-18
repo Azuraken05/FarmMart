@@ -1,7 +1,9 @@
 package com.example.farmmart;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Button;
@@ -35,13 +37,14 @@ public class AddProductActivity extends AppCompatActivity {
         imgPreview = findViewById(R.id.img_select_product);
         Button btnSave = findViewById(R.id.btn_save_product);
 
-        // ✅ Check if we are editing
+        // ✅ Check if we are editing an existing product
         productId = getIntent().getIntExtra("PRODUCT_ID", -1);
         if (productId != -1) {
             btnSave.setText("UPDATE PRODUCT");
             loadProductForEdit();
         }
 
+        // Image Picker Logic
         ActivityResultLauncher<String[]> getContent = registerForActivityResult(
                 new ActivityResultContracts.OpenDocument(),
                 uri -> {
@@ -80,23 +83,32 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void saveProduct() {
-        // ✅ Get strings and trim spaces
         String name = etName.getText().toString().trim();
         String priceText = etPrice.getText().toString().trim();
         String stockText = etStock.getText().toString().trim();
         String desc = etDescription.getText().toString().trim();
 
-        // ✅ VALIDATION: Prevents NumberFormatException crash if fields are empty
+        // ✅ Retrieve the farmer ID saved during Login in MainActivity
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int currentFarmerId = sharedPreferences.getInt("userId", -1);
+
+        // Validation
         if (name.isEmpty() || priceText.isEmpty() || stockText.isEmpty()) {
             Toast.makeText(this, "Please fill in Name, Price, and Stock", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // ✅ If currentFarmerId is -1, it means the login session wasn't saved correctly
+        if (currentFarmerId == -1) {
+            Toast.makeText(this, "Session error. Please login again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new Thread(() -> {
             try {
-                // ✅ Safe to parse now because we checked if they were empty
                 int stockValue = Integer.parseInt(stockText);
 
+                // Create product object with the farmer's ID as the 8th parameter
                 Product p = new Product(
                         name,
                         "My Farm",
@@ -104,11 +116,12 @@ public class AddProductActivity extends AppCompatActivity {
                         spinnerCat.getSelectedItem().toString(),
                         stockValue,
                         selectedImagePath,
-                        desc
+                        desc,
+                        currentFarmerId
                 );
 
                 if (productId != -1) {
-                    p.id = productId;
+                    p.id = productId; // Keep the same ID if updating
                     AppDatabase.getInstance(this).productDao().updateProduct(p);
                 } else {
                     AppDatabase.getInstance(this).productDao().insertProduct(p);
@@ -116,10 +129,10 @@ public class AddProductActivity extends AppCompatActivity {
 
                 runOnUiThread(() -> {
                     Toast.makeText(this, "Market Updated!", Toast.LENGTH_SHORT).show();
-                    finish();
+                    finish(); // Return to the dashboard
                 });
             } catch (NumberFormatException e) {
-                runOnUiThread(() -> Toast.makeText(this, "Invalid number format in Price or Stock", Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(this, "Invalid format in Price or Stock", Toast.LENGTH_SHORT).show());
             }
         }).start();
     }

@@ -1,5 +1,7 @@
 package com.example.farmmart;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -77,9 +79,22 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void placeOrderLogic() {
+        // ✅ 1. Get current user ID from SharedPreferences
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int currentUserId = sharedPreferences.getInt("userId", -1);
+
+        if (currentUserId == -1) {
+            Toast.makeText(this, "Session expired. Please login again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         new Thread(() -> {
-            // 1. Get the items that are about to be ordered
             List<CartItem> selectedItems = db.cartDao().getSelectedItems();
+
+            if (selectedItems.isEmpty()) {
+                runOnUiThread(() -> Toast.makeText(this, "No items selected", Toast.LENGTH_SHORT).show());
+                return;
+            }
 
             // 2. Transfer each CartItem to the OrderItem table
             for (CartItem item : selectedItems) {
@@ -88,19 +103,19 @@ public class CheckoutActivity extends AppCompatActivity {
                 order.productPrice = item.productPrice;
                 order.quantity = item.quantity;
                 order.imagePath = item.imagePath;
-                order.status = "To Ship"; // ✅ Set status to show in "To Ship" tab
+                order.status = "To Receive";
 
-                // If you have userId in CartItem, pass it here
-                // order.userId = item.userId;
+                // ✅ 3. Assign the order to the logged-in user
+                order.userId = currentUserId;
 
                 db.orderDao().insertOrder(order);
             }
 
-            // 3. Delete the items from the cart
+            // 4. Clear the selected items from the cart
             db.cartDao().deleteSelectedItems();
 
             runOnUiThread(() -> {
-                Toast.makeText(this, "Order Placed Successfully!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Order Placed! Check 'To Receive' tab.", Toast.LENGTH_LONG).show();
                 finish();
             });
         }).start();

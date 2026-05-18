@@ -1,6 +1,8 @@
 package com.example.farmmart;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,7 +30,6 @@ public class fragment_farmer_products extends Fragment {
 
         db = AppDatabase.getInstance(getContext());
 
-        // Use LinearLayoutManager for the management list view
         rvFarmerProducts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         btnAddNew.setOnClickListener(v -> {
@@ -45,12 +46,21 @@ public class fragment_farmer_products extends Fragment {
         loadFarmerProducts();
     }
 
+    /**
+     * Loads products specifically for the logged-in farmer.
+     */
     private void loadFarmerProducts() {
+        // ✅ 1. Get the current farmer's ID from SharedPreferences
+        // Make sure "UserPrefs" and "userId" match your LoginActivity keys
+        SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        int currentFarmerId = sharedPreferences.getInt("userId", -1);
+
         new Thread(() -> {
-            List<Product> products = db.productDao().getAllProducts();
+            // ✅ 2. Use the filtered DAO method instead of getAllProducts()
+            List<Product> products = db.productDao().getProductsByFarmer(currentFarmerId);
+
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    // ✅ FIXED: Added 'true' parameter to specify Farmer View
                     FarmerProductAdapter adapter = new FarmerProductAdapter(
                             getContext(),
                             products,
@@ -59,7 +69,6 @@ public class fragment_farmer_products extends Fragment {
 
                                 @Override
                                 public void onEditClick(Product product) {
-                                    // Logic for Editing
                                     Intent intent = new Intent(getActivity(), AddProductActivity.class);
                                     intent.putExtra("PRODUCT_ID", product.id);
                                     startActivity(intent);
@@ -67,7 +76,6 @@ public class fragment_farmer_products extends Fragment {
 
                                 @Override
                                 public void onDeleteClick(Product product) {
-                                    // Logic for Deleting
                                     deleteProductFromDb(product);
                                 }
                             });

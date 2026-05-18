@@ -1,6 +1,8 @@
 package com.example.farmmart;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -84,39 +86,57 @@ public class MainActivity extends AppCompatActivity {
 
             // A. CHECK HARDCODED ADMIN ACCOUNTS
             if (emailInput.equals("user") && passwordInput.equals("1234")) {
+                saveSession(999); // Assign a dummy ID for Admin User
                 Intent intent = new Intent(MainActivity.this, Dashboard.class);
-                intent.putExtra("USER_NAME", "Standard User"); // Sending admin name
+                intent.putExtra("USER_NAME", "Standard User");
                 startActivity(intent);
                 finish();
             }
             else if (emailInput.equals("farmer") && passwordInput.equals("1234")) {
+                saveSession(888); // Assign a dummy ID for Admin Farmer
                 Intent intent = new Intent(MainActivity.this, farmer_dashboard.class);
-                intent.putExtra("USER_NAME", "Admin Farmer"); // Sending admin name
+                intent.putExtra("USER_NAME", "Admin Farmer");
                 startActivity(intent);
                 finish();
             }
 
             // B. CHECK LOCAL ROOM DATABASE
             else {
-                User loggedInUser = AppDatabase.getInstance(this).userDao().login(emailInput, passwordInput);
+                new Thread(() -> {
+                    User loggedInUser = AppDatabase.getInstance(this).userDao().login(emailInput, passwordInput);
 
-                if (loggedInUser != null) {
-                    Intent intent;
-                    if (loggedInUser.role.equals("Farmer")) {
-                        intent = new Intent(MainActivity.this, farmer_dashboard.class);
-                    } else {
-                        intent = new Intent(MainActivity.this, Dashboard.class);
-                    }
+                    runOnUiThread(() -> {
+                        if (loggedInUser != null) {
+                            // ✅ SAVE THE SESSION (This fixes the error!)
+                            saveSession(loggedInUser.id);
 
-                    // ✅ CRITICAL: Pass the real name from the database to the dashboard
-                    intent.putExtra("USER_NAME", loggedInUser.name);
+                            Intent intent;
+                            if (loggedInUser.role.equals("Farmer")) {
+                                intent = new Intent(MainActivity.this, farmer_dashboard.class);
+                            } else {
+                                intent = new Intent(MainActivity.this, Dashboard.class);
+                            }
 
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(MainActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
-                }
+                            intent.putExtra("USER_NAME", loggedInUser.name);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(MainActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }).start();
             }
         });
+    }
+
+    /**
+     * ✅ Helper method to save the user's ID to SharedPreferences.
+     * This allows all other activities to know who is logged in.
+     */
+    private void saveSession(int userId) {
+        SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("userId", userId);
+        editor.apply();
     }
 }

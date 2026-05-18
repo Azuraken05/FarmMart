@@ -21,33 +21,33 @@ public class farmer_dashboard extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_farmer_dashboard);
 
-        // 1. Handle System Bar Padding (Fixes overlapping status/nav bars)
+        // 1. Handle System Bar Padding
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0); // Keep bottom 0 if nav bar is custom
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
 
         // 2. Initialize Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottomNavigationView2);
 
-// 3. Set Default Fragment (Loads "PRODUCTS" screen first)
+        // 3. Set Default Fragment (Loads your products screen first)
         if (savedInstanceState == null) {
             replaceFragment(new fragment_farmer_products());
-            bottomNavigationView.setSelectedItemId(R.id.shop_farmer); // ✅ Matches your XML ID
+            bottomNavigationView.setSelectedItemId(R.id.shop_farmer);
         }
 
-// 4. Handle Navigation Item Clicks
+        // 4. Handle Navigation Item Clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.shop_farmer) { // ✅ Matches your XML ID
+            if (id == R.id.shop_farmer) {
                 replaceFragment(new fragment_farmer_products());
                 return true;
-            } else if (id == R.id.home_farmer) { // ✅ Matches your XML ID
+            } else if (id == R.id.home_farmer) {
                 // replaceFragment(new FarmerHomeFragment());
                 return true;
-            } else if (id == R.id.orders_farmer) { // ✅ Matches your XML ID
+            } else if (id == R.id.orders_farmer) {
                 // replaceFragment(new FarmerOrdersFragment());
                 return true;
             }
