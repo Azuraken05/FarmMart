@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FarmMart">
         <activity
+            android:name=".MyPurchasesActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity_product_detail"
             android:exported="false" />
         <activity
@@ -30,8 +33,6 @@
         <activity
             android:name=".CheckoutActivity"
             android:exported="false" />
-
-
         <activity
             android:name=".MainActivity"
             android:exported="true">

@@ -5,15 +5,14 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-// ✅ Includes all three tables: User, Product, and CartItem
-@Database(entities = {User.class, Product.class, CartItem.class}, version = 4)
+// ✅ FIXED: Added OrderItem.class to the entities list
+@Database(entities = {User.class, Product.class, CartItem.class, OrderItem.class}, version = 5)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract UserDao userDao();
     public abstract ProductDao productDao();
-
-    // ✅ This allows your Cart Module to talk to the database
     public abstract CartDao cartDao();
+    public abstract OrderDao orderDao();
 
     private static AppDatabase instance;
 
@@ -22,7 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "farm_mart_database")
                     // ✅ fallbackToDestructiveMigration will wipe old data to apply the new
-                    // CartItem table structure without crashing the app.
+                    // schema changes (like adding OrderItem) without crashing the app.
                     .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .build();

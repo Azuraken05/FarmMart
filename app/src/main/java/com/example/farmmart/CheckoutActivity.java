@@ -17,7 +17,6 @@ public class CheckoutActivity extends AppCompatActivity {
     private Button btnPlaceOrder;
     private ImageView btnBack;
 
-    // ✅ Added for showing the item list
     private RecyclerView rvItems;
     private CheckoutItemAdapter adapter;
 
@@ -31,14 +30,12 @@ public class CheckoutActivity extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
-        // Initialize Views
         tvSubtotal = findViewById(R.id.tv_checkout_subtotal);
         tvDeliveryFee = findViewById(R.id.tv_checkout_delivery);
         tvTotal = findViewById(R.id.tv_checkout_total);
         btnPlaceOrder = findViewById(R.id.btn_place_order);
         btnBack = findViewById(R.id.btn_checkout_back);
 
-        // ✅ Initialize RecyclerView
         rvItems = findViewById(R.id.rv_checkout_items);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
 
@@ -46,7 +43,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
         loadOrderSummary();
 
-        // Logic for Place Order
         btnPlaceOrder.setOnClickListener(v -> {
             placeOrderLogic();
         });
@@ -54,7 +50,6 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void loadOrderSummary() {
         new Thread(() -> {
-            // Get only selected items
             List<CartItem> selectedItems = db.cartDao().getSelectedItems();
             subtotal = 0;
 
@@ -70,11 +65,9 @@ public class CheckoutActivity extends AppCompatActivity {
             double finalTotal = subtotal + DELIVERY_FEE;
 
             runOnUiThread(() -> {
-                // ✅ Update the list of items
                 adapter = new CheckoutItemAdapter(selectedItems);
                 rvItems.setAdapter(adapter);
 
-                // Update text summaries
                 tvSubtotal.setText("₱" + (int) subtotal);
                 tvDeliveryFee.setText("₱" + DELIVERY_FEE);
                 tvTotal.setText("₱" + (int) finalTotal);
@@ -85,12 +78,29 @@ public class CheckoutActivity extends AppCompatActivity {
 
     private void placeOrderLogic() {
         new Thread(() -> {
-            // 1. Delete only the items that were checked/selected
+            // 1. Get the items that are about to be ordered
+            List<CartItem> selectedItems = db.cartDao().getSelectedItems();
+
+            // 2. Transfer each CartItem to the OrderItem table
+            for (CartItem item : selectedItems) {
+                OrderItem order = new OrderItem();
+                order.productName = item.productName;
+                order.productPrice = item.productPrice;
+                order.quantity = item.quantity;
+                order.imagePath = item.imagePath;
+                order.status = "To Ship"; // ✅ Set status to show in "To Ship" tab
+
+                // If you have userId in CartItem, pass it here
+                // order.userId = item.userId;
+
+                db.orderDao().insertOrder(order);
+            }
+
+            // 3. Delete the items from the cart
             db.cartDao().deleteSelectedItems();
 
             runOnUiThread(() -> {
                 Toast.makeText(this, "Order Placed Successfully!", Toast.LENGTH_LONG).show();
-                // 2. Return to Dashboard (Cart Fragment will refresh via onResume)
                 finish();
             });
         }).start();

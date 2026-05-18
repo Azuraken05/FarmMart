@@ -52,58 +52,57 @@ public class ProfileFragment extends Fragment {
 
         // 3. Logout Functionality
         btnLogout.setOnClickListener(v -> {
-            // Clear SharedPreferences session
             SharedPreferences preferences = getActivity().getSharedPreferences("user_session", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.clear();
             editor.apply();
 
-            // Redirect to MainActivity (Login Page)
-            // FLAG_ACTIVITY_CLEAR_TASK ensures the user cannot go back to the profile
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             getActivity().finish();
         });
 
-        // Placeholder clicks for top buttons
-        view.findViewById(R.id.btn_to_ship).setOnClickListener(v -> {});
-        view.findViewById(R.id.btn_to_receive).setOnClickListener(v -> {});
-        view.findViewById(R.id.btn_completed).setOnClickListener(v -> {});
+        // --- 4. Navigation to My Purchases (To Ship) ---
+        // ✅ FIXED: Added Intent to open the My Purchases screen
+        view.findViewById(R.id.btn_to_ship).setOnClickListener(v -> {
+            // Replace 'MyPurchasesActivity' with the actual class name you created for that UI
+            Intent intent = new Intent(getActivity(), MyPurchasesActivity.class);
+            intent.putExtra("ORDER_STATUS", "To Ship");
+            startActivity(intent);
+        });
+
+        // Optional placeholders for other tabs
+        view.findViewById(R.id.btn_to_receive).setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), MyPurchasesActivity.class);
+            intent.putExtra("ORDER_STATUS", "To Receive");
+            startActivity(intent);
+        });
+
+        view.findViewById(R.id.btn_completed).setOnClickListener(featureToast);
 
         return view;
     }
 
     private void loadUserData() {
-        // Assuming you store the logged-in user's ID in SharedPreferences
         SharedPreferences preferences = getActivity().getSharedPreferences("user_session", Context.MODE_PRIVATE);
         int userId = preferences.getInt("user_id", -1);
 
         if (userId != -1) {
             new Thread(() -> {
                 User user = db.userDao().getUserById(userId);
-                if (user != null) {
-                    if (getActivity() != null) {
-                        getActivity().runOnUiThread(() -> {
-                            tvDisplayName.setText(user.name);
-                            tvAccountType.setText(user.role); // Sets "Customer" or "Farmer"
-
-                            // Sets registration date if available
-                            if (user.createdAt != null && !user.createdAt.isEmpty()) {
-                                tvMemberSince.setText(user.createdAt);
-                            } else {
-                                tvMemberSince.setText("January 2026"); // Fallback
-                            }
-                        });
-                    }
+                if (user != null && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        tvDisplayName.setText(user.name);
+                        tvAccountType.setText(user.role);
+                        if (user.createdAt != null && !user.createdAt.isEmpty()) {
+                            tvMemberSince.setText(user.createdAt);
+                        } else {
+                            tvMemberSince.setText("January 2026");
+                        }
+                    });
                 }
             }).start();
-        } else {
-            // Fallback for intent-based data if shared prefs aren't ready
-            if (getActivity() != null && getActivity().getIntent() != null) {
-                String userName = getActivity().getIntent().getStringExtra("USER_NAME");
-                if (userName != null) tvDisplayName.setText(userName);
-            }
         }
     }
 }
