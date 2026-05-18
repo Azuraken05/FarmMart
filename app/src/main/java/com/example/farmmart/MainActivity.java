@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     // ✅ CRITICAL: Pass the real name from the database to the dashboard
-                    intent.putExtra("USER_NAME", loggedInUser.fullName);
+                    intent.putExtra("USER_NAME", loggedInUser.name);
 
                     startActivity(intent);
                     finish();

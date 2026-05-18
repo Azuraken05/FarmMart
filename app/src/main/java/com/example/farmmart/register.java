@@ -75,7 +75,7 @@ public class register extends AppCompatActivity {
             } else {
                 // Create the User object
                 User newUser = new User();
-                newUser.fullName = name;
+                newUser.name = name;
                 newUser.email = email;
                 newUser.password = password;
                 newUser.role = selectedRole;

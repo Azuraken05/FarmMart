@@ -22,9 +22,13 @@ public class fragment_farmer_products extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_farmer_products, container, false);
+
         rvFarmerProducts = view.findViewById(R.id.rv_farmer_products);
         Button btnAddNew = view.findViewById(R.id.btn_add_new_product);
+
         db = AppDatabase.getInstance(getContext());
+
+        // Use LinearLayoutManager for the management list view
         rvFarmerProducts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         btnAddNew.setOnClickListener(v -> {
@@ -46,21 +50,27 @@ public class fragment_farmer_products extends Fragment {
             List<Product> products = db.productDao().getAllProducts();
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    // ✅ FIXED: Added getContext() as the first argument
-                    // ✅ FIXED: Updated listener implementation to match the new Adapter interface
-                    FarmerProductAdapter adapter = new FarmerProductAdapter(getContext(), products, new FarmerProductAdapter.OnProductListener() {
+                    // ✅ FIXED: Added 'true' parameter to specify Farmer View
+                    FarmerProductAdapter adapter = new FarmerProductAdapter(
+                            getContext(),
+                            products,
+                            true,
+                            new FarmerProductAdapter.OnProductActionListener() {
 
-                        @Override
-                        public void onProductClick(Product product) {
-                            // This replaces the old onEdit if you want simple click-to-edit logic
-                            Intent intent = new Intent(getActivity(), AddProductActivity.class);
-                            intent.putExtra("PRODUCT_ID", product.id);
-                            startActivity(intent);
-                        }
+                                @Override
+                                public void onEditClick(Product product) {
+                                    // Logic for Editing
+                                    Intent intent = new Intent(getActivity(), AddProductActivity.class);
+                                    intent.putExtra("PRODUCT_ID", product.id);
+                                    startActivity(intent);
+                                }
 
-                        // Note: If you want onDelete/onEdit buttons specifically,
-                        // you must add those methods back into the FarmerProductAdapter.OnProductListener interface first.
-                    });
+                                @Override
+                                public void onDeleteClick(Product product) {
+                                    // Logic for Deleting
+                                    deleteProductFromDb(product);
+                                }
+                            });
                     rvFarmerProducts.setAdapter(adapter);
                 });
             }

@@ -8,8 +8,11 @@ public class User {
     @PrimaryKey(autoGenerate = true)
     public int id;
 
-    public String fullName;
+    // ✅ Make sure these three lines are exactly like this:
+    public String name;
+    public String role;      // This will store "Farmer" or "Customer"
+    public String createdAt; // This will store the "Member Since" date
+
     public String email;
     public String password;
-    public String role; // Stores "Farmer" or "Buyer"
 }
