@@ -31,6 +31,24 @@ public interface ProductDao {
     @Query("SELECT COUNT(*) FROM products WHERE farmerId = :farmerId")
     int getProductCountByFarmer(int farmerId);
 
+    /**
+     * ✅ NEW COUNTER: Counts ALL products listed by a specific farmer for the Products Management view
+     */
+    @Query("SELECT COUNT(*) FROM products WHERE farmerId = :farmerId")
+    int getTotalProductCount(int farmerId);
+
+    /**
+     * ✅ NEW COUNTER: Counts only active products that are in stock (STOCK > 0) for a specific farmer
+     */
+    @Query("SELECT COUNT(*) FROM products WHERE farmerId = :farmerId AND stock > 0")
+    int getActiveProductCount(int farmerId);
+
+    /**
+     * ✅ OPTIONAL OPTIMIZATION: Pulls only the latest 10 items for the horizontal dashboard row view
+     */
+    @Query("SELECT * FROM products WHERE farmerId = :farmerId ORDER BY id DESC LIMIT 10")
+    List<Product> getProductsByFarmerLatest(int farmerId);
+
     // --- General Queries for the Shop (Customer View) ---
     // Customers can see products from ALL farmers combined.
 

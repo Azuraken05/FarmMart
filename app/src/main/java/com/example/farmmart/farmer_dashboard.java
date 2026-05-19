@@ -48,10 +48,11 @@ public class farmer_dashboard extends AppCompatActivity {
                 replaceFragment(new fragment_farmer_products());
                 return true;
             } else if (id == R.id.orders_farmer) {
-                // replaceFragment(new FarmerOrdersFragment());
+                // ✅ NOW ACTIVE: Loads your Orders fragment with the To Ship, Shipping, and Completed tabs!
+                replaceFragment(new FarmerOrdersFragment());
                 return true;
             } else if (id == R.id.profile_farmer) {
-                // ✅ This seamlessly loads your brand-new, standalone ProfileFragment file!
+                // Loads your brand-new, standalone ProfileFragment file!
                 replaceFragment(new ProfileFragment());
                 return true;
             }
@@ -66,4 +67,4 @@ public class farmer_dashboard extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-} // 👈 This should be the ONLY closing bracket at the very end of your file!
+}

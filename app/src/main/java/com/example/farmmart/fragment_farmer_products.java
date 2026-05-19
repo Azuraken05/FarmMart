@@ -11,12 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView; // ✅ ADDED: For binding layout count elements
 import android.widget.Toast;
 import java.util.List;
 
 public class fragment_farmer_products extends Fragment {
 
     private RecyclerView rvFarmerProducts;
+    private TextView tvTotalProductsCount, tvActiveProductsCount; // ✅ ADDED: View handles for dashboard metrics
     private AppDatabase db;
 
     public fragment_farmer_products() { }
@@ -27,6 +29,10 @@ public class fragment_farmer_products extends Fragment {
 
         rvFarmerProducts = view.findViewById(R.id.rv_farmer_products);
         Button btnAddNew = view.findViewById(R.id.btn_add_new_product);
+
+        // ✅ ADDED: Mapping to capture the summary header metrics values
+        tvTotalProductsCount = view.findViewById(R.id.tv_total_products_count);
+        tvActiveProductsCount = view.findViewById(R.id.tv_active_products_count);
 
         db = AppDatabase.getInstance(getContext());
 
@@ -51,16 +57,26 @@ public class fragment_farmer_products extends Fragment {
      */
     private void loadFarmerProducts() {
         // ✅ 1. Get the current farmer's ID from SharedPreferences
-        // Make sure "UserPrefs" and "userId" match your LoginActivity keys
         SharedPreferences sharedPreferences = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         int currentFarmerId = sharedPreferences.getInt("userId", -1);
 
         new Thread(() -> {
-            // ✅ 2. Use the filtered DAO method instead of getAllProducts()
+            // ✅ 2. Use your filtered database calculation indicators queries
+            int totalCount = db.productDao().getTotalProductCount(currentFarmerId);
+            int activeCount = db.productDao().getActiveProductCount(currentFarmerId);
             List<Product> products = db.productDao().getProductsByFarmer(currentFarmerId);
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
+                    // ✅ 3. Safely update text strings indicators on UI main context thread
+                    if (tvTotalProductsCount != null) {
+                        tvTotalProductsCount.setText(String.valueOf(totalCount));
+                    }
+                    if (tvActiveProductsCount != null) {
+                        tvActiveProductsCount.setText(String.valueOf(activeCount));
+                    }
+
+                    // 4. Construct list display metrics layout maps bounds
                     FarmerProductAdapter adapter = new FarmerProductAdapter(
                             getContext(),
                             products,
@@ -91,7 +107,7 @@ public class fragment_farmer_products extends Fragment {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     Toast.makeText(getContext(), product.name + " deleted", Toast.LENGTH_SHORT).show();
-                    loadFarmerProducts();
+                    loadFarmerProducts(); // Automatically updates totals and item list feeds together
                 });
             }
         }).start();

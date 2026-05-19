@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="160dp"
+    android:layout_height="240dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp">
+
+            <ImageView
+                android:id="@+id/img_dash_prod_thumb"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/logo"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:id="@+id/tv_dash_prod_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="IN STOCK"
+                android:textSize="8sp"
+                android:textStyle="bold"
+                android:textColor="#435334"
+                android:background="#E2F0D9"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="3dp"
+                android:layout_margin="8dp"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_dash_prod_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Organic Pechay"
+            android:textStyle="bold"
+            android:textColor="#141414"
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp">
+
+            <TextView
+                android:id="@+id/tv_dash_prod_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₱20/kg"
+                android:textStyle="bold"
+                android:textColor="#435334"
+                android:textSize="13sp"/>
+
+            <TextView
+                android:id="@+id/tv_dash_prod_stock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="STOCK 25"
+                android:textSize="10sp"
+                android:textColor="#828282"
+                android:textStyle="bold"/>
+        </RelativeLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="@color/white">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <FrameLayout
+            android:id="@+id/avatar_frame"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@drawable/nav_background_rounded"
+            android:backgroundTint="#EAE9E4"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true">
+            <TextView
+                android:id="@+id/tv_recent_avatar_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="MS"
+                android:textStyle="bold"
+                android:textColor="#435334"
+                android:textSize="14sp"/>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/info_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_toEndOf="@id/avatar_frame"
+            android:layout_marginStart="12dp"
+            android:layout_toStartOf="@+id/tv_recent_status_badge">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="bottom">
+                <TextView
+                    android:id="@+id/tv_recent_cust_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maria Santos"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="#141414"/>
+                <TextView
+                    android:id="@+id/tv_recent_order_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" #ORD-9921"
+                    android:textSize="11sp"
+                    android:textColor="#828282"
+                    android:layout_marginStart="4dp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_recent_items"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fresh Calamansi (5kg), Red Onions..."
+                android:textSize="12sp"
+                android:textColor="#606060"
+                android:layout_marginTop="2dp"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <TextView
+                android:id="@+id/tv_recent_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₱850.00"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:textColor="#141414"
+                android:layout_marginTop="6dp"/>
+
+            <TextView
+                android:id="@+id/tv_recent_payment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="G-CASH PAID"
+                android:textSize="9sp"
+                android:textStyle="bold"
+                android:textColor="#828282"
+                android:layout_marginTop="2dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_recent_status_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:text="Pending"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:textColor="#D32F2F"
+            android:background="#FCECEB"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"/>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
