@@ -1,6 +1,6 @@
 package com.example.farmmart;
 
-import android.content.Intent; // ✅ Added this import
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -98,7 +98,7 @@ public class HomepageUserFragment extends Fragment {
                 productImg.setImageResource(R.drawable.logo);
             }
 
-            // ✅ CLICK LISTENER: Opens the detail screen for this specific product
+            // CLICK LISTENER: Opens the detail screen for this specific product
             cardView.setOnClickListener(v -> {
                 Intent intent = new Intent(getContext(), activity_product_detail.class);
                 intent.putExtra("PRODUCT_ID", product.id); // Pass the ID to fetch details in next screen

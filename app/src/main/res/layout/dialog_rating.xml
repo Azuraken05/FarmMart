@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center_horizontal"
+    android:background="@android:color/white">
+
+    <TextView
+        android:id="@+id/tv_dialog_product_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sweet Mangos"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#222222"
+        android:layout_gravity="start"
+        android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp">
+
+        <ImageView
+            android:id="@+id/star1"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_star_vector"
+            app:tint="#e3e3e3" />
+
+        <ImageView
+            android:id="@+id/star2"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_star_vector"
+            app:tint="#e3e3e3" />
+
+        <ImageView
+            android:id="@+id/star3"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_star_vector"
+            app:tint="#e3e3e3" />
+
+        <ImageView
+            android:id="@+id/star4"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_star_vector"
+            app:tint="#e3e3e3" />
+
+        <ImageView
+            android:id="@+id/star5"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_star_vector"
+            app:tint="#e3e3e3" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_dialog_confirm"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#435334"
+        android:text="Confirm"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:textSize="16sp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        android:background="@drawable/edittext_roundborder" />
+
+</LinearLayout>
