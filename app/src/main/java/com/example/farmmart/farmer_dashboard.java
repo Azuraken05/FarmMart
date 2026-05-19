@@ -31,24 +31,28 @@ public class farmer_dashboard extends AppCompatActivity {
         // 2. Initialize Bottom Navigation
         bottomNavigationView = findViewById(R.id.bottomNavigationView2);
 
-        // 3. Set Default Fragment (Loads your products screen first)
+        // 3. Set Default Fragment to FarmerHomeFragment on initial Login load
         if (savedInstanceState == null) {
-            replaceFragment(new fragment_farmer_products());
-            bottomNavigationView.setSelectedItemId(R.id.shop_farmer);
+            replaceFragment(new FarmerHomeFragment());
+            bottomNavigationView.setSelectedItemId(R.id.home_farmer);
         }
 
         // 4. Handle Navigation Item Clicks
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
 
-            if (id == R.id.shop_farmer) {
-                replaceFragment(new fragment_farmer_products());
+            if (id == R.id.home_farmer) {
+                replaceFragment(new FarmerHomeFragment());
                 return true;
-            } else if (id == R.id.home_farmer) {
-                // replaceFragment(new FarmerHomeFragment());
+            } else if (id == R.id.shop_farmer) {
+                replaceFragment(new fragment_farmer_products());
                 return true;
             } else if (id == R.id.orders_farmer) {
                 // replaceFragment(new FarmerOrdersFragment());
+                return true;
+            } else if (id == R.id.profile_farmer) {
+                // ✅ This seamlessly loads your brand-new, standalone ProfileFragment file!
+                replaceFragment(new ProfileFragment());
                 return true;
             }
             return false;
@@ -62,4 +66,4 @@ public class farmer_dashboard extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
     }
-}
+} // 👈 This should be the ONLY closing bracket at the very end of your file!

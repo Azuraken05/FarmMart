@@ -19,4 +19,23 @@ public interface OrderDao {
     // ✅ Used by OrderAdapter to update status when "Order Received" is clicked
     @Query("UPDATE order_items SET status = :newStatus WHERE orderId = :orderId")
     void updateOrderStatus(int orderId, String newStatus);
+
+    /**
+     * ✅ Farmer Dashboard feature: Sums up sales total based on Completed order states.
+     * It strips currency symbols dynamically to compute real math totals safely.
+     */
+    @Query("SELECT IFNULL(SUM(CAST(REPLACE(REPLACE(productPrice, '₱', ''), ',', '') AS REAL) * quantity), 0.0) FROM order_items WHERE farmerId = :farmerId AND status = 'Completed'")
+    double getTotalSalesByFarmer(int farmerId);
+
+    /**
+     * ✅ Farmer Dashboard feature: Tracks counter elements for incoming Pending order items
+     */
+    @Query("SELECT COUNT(*) FROM order_items WHERE farmerId = :farmerId AND status = 'Pending'")
+    int getPendingCountByFarmer(int farmerId);
+
+    /**
+     * ✅ Farmer Dashboard feature: Pulls the latest 5 incoming client orders for row views
+     */
+    @Query("SELECT * FROM order_items WHERE farmerId = :farmerId ORDER BY orderId DESC LIMIT 5")
+    List<OrderItem> getRecentOrdersForFarmer(int farmerId);
 }

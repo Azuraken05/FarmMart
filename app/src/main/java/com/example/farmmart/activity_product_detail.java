@@ -2,6 +2,7 @@ package com.example.farmmart;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,7 +14,7 @@ public class activity_product_detail extends AppCompatActivity {
     private int quantity = 1;
     private TextView tvQty;
     private AppDatabase db;
-    private String currentImagePath = ""; // ✅ Stores the path to pass to the Cart
+    private String currentImagePath = ""; // Stores the path to pass to the Cart
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,17 @@ public class activity_product_detail extends AppCompatActivity {
 
         db = AppDatabase.getInstance(this);
 
-        // 2. Get Product ID from Intent
+        // 2. Get Product ID and Farmer View check flag from Intent
         int productId = getIntent().getIntExtra("PRODUCT_ID", -1);
+        boolean isFarmerView = getIntent().getBooleanExtra("IS_FARMER_VIEW", false);
+
+        // ✅ HIDE PURCHASE CONTROLS SAFELY IF ACCESSED FROM FARMER DASHBOARD
+        if (isFarmerView) {
+            if (btnAddToCart != null) btnAddToCart.setVisibility(View.GONE);
+            if (btnPlus != null) btnPlus.setVisibility(View.GONE);
+            if (btnMinus != null) btnMinus.setVisibility(View.GONE);
+            if (tvQty != null) tvQty.setVisibility(View.GONE);
+        }
 
         if (productId != -1) {
             loadProductDetails(productId, imgMain, tvName, tvPrice, tvDesc);
@@ -47,44 +57,59 @@ public class activity_product_detail extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         // 4. Quantity Increment
-        btnPlus.setOnClickListener(v -> {
-            quantity++;
-            tvQty.setText(String.valueOf(quantity));
-        });
+        if (btnPlus != null) {
+            btnPlus.setOnClickListener(v -> {
+                quantity++;
+                tvQty.setText(String.valueOf(quantity));
+            });
+        }
 
         // 5. Quantity Decrement
-        btnMinus.setOnClickListener(v -> {
-            if (quantity > 1) {
-                quantity--;
-                tvQty.setText(String.valueOf(quantity));
-            }
-        });
+        if (btnMinus != null) {
+            btnMinus.setOnClickListener(v -> {
+                if (quantity > 1) {
+                    quantity--;
+                    tvQty.setText(String.valueOf(quantity));
+                }
+            });
+        }
 
-        // 6. ✅ Add to Cart Logic (Saving to Room Database)
-        btnAddToCart.setOnClickListener(v -> {
-            String pName = tvName.getText().toString();
-            String pPrice = tvPrice.getText().toString();
+        // 6. Add to Cart Logic (Saving to Room Database)
+        if (btnAddToCart != null) {
+            btnAddToCart.setOnClickListener(v -> {
+                String pName = tvName.getText().toString();
+                String pPrice = tvPrice.getText().toString();
 
-            new Thread(() -> {
-                // Create a new CartItem object with current details
-                CartItem cartItem = new CartItem(
-                        productId,
-                        pName,
-                        pPrice,
-                        currentImagePath, // Passed from the loaded product
-                        quantity,
-                        true // Items are selected for checkout by default
-                );
+                new Thread(() -> {
+                    // ✅ 1. Fetch the product from Room to find out who owns it
+                    Product currentProduct = db.productDao().getProductById(productId);
+                    int trackedFarmerId = -1;
 
-                // Perform the Database Insert
-                db.cartDao().addToCart(cartItem);
+                    if (currentProduct != null) {
+                        trackedFarmerId = currentProduct.farmerId;
+                    }
 
-                // Show success message on the UI Thread
-                runOnUiThread(() -> {
-                    Toast.makeText(this, "Added " + quantity + " " + pName + " to cart", Toast.LENGTH_SHORT).show();
-                });
-            }).start();
-        });
+                    // ✅ 2. Pass the retrieved farmerId as the 7th argument to match your new constructor structure
+                    CartItem cartItem = new CartItem(
+                            productId,
+                            pName,
+                            pPrice,
+                            currentImagePath, // Passed from the loaded product
+                            quantity,
+                            true,             // Items are selected for checkout by default
+                            trackedFarmerId   // Links the item back to the owner
+                    );
+
+                    // Perform the Database Insert
+                    db.cartDao().addToCart(cartItem);
+
+                    // Show success message on the UI Thread
+                    runOnUiThread(() -> {
+                        Toast.makeText(this, "Added " + quantity + " " + pName + " to cart", Toast.LENGTH_SHORT).show();
+                    });
+                }).start();
+            });
+        }
     }
 
     private void loadProductDetails(int id, ImageView img, TextView name, TextView price, TextView desc) {
@@ -92,7 +117,7 @@ public class activity_product_detail extends AppCompatActivity {
             Product p = db.productDao().getProductById(id);
 
             if (p != null) {
-                // ✅ Capture the image path so it can be saved to the Cart table later
+                // Capture the image path so it can be saved to the Cart table later
                 currentImagePath = p.imagePath;
 
                 runOnUiThread(() -> {

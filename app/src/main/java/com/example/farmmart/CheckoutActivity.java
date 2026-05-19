@@ -1,6 +1,7 @@
 package com.example.farmmart;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
@@ -79,7 +80,7 @@ public class CheckoutActivity extends AppCompatActivity {
     }
 
     private void placeOrderLogic() {
-        // ✅ 1. Get current user ID from SharedPreferences
+        // 1. Get current user ID from SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE);
         int currentUserId = sharedPreferences.getInt("userId", -1);
 
@@ -103,10 +104,15 @@ public class CheckoutActivity extends AppCompatActivity {
                 order.productPrice = item.productPrice;
                 order.quantity = item.quantity;
                 order.imagePath = item.imagePath;
-                order.status = "To Receive";
 
-                // ✅ 3. Assign the order to the logged-in user
+                // ✅ FIXED: Changed from "Completed" back to "To Ship" so it reappears inside your ProfileFragment user tabs!
+                order.status = "To Ship";
+
+                // 3. Assign the order to the logged-in customer user
                 order.userId = currentUserId;
+
+                // ✅ Remembers the farmerId link so your dashboard analytics can trace it later
+                order.farmerId = item.farmerId;
 
                 db.orderDao().insertOrder(order);
             }
@@ -115,7 +121,8 @@ public class CheckoutActivity extends AppCompatActivity {
             db.cartDao().deleteSelectedItems();
 
             runOnUiThread(() -> {
-                Toast.makeText(this, "Order Placed! Check 'To Receive' tab.", Toast.LENGTH_LONG).show();
+                // ✅ UPDATED: Fixed text indicator to guide users to the proper section
+                Toast.makeText(this, "Order Placed! Check your 'To Ship' tab.", Toast.LENGTH_LONG).show();
                 finish();
             });
         }).start();

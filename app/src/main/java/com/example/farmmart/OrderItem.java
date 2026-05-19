@@ -17,7 +17,9 @@ public class OrderItem {
     // Status can be: "To Ship", "To Receive", or "Completed"
     public String status;
 
-    // ✅ Crucial for multi-user support:
     // Links this order to the specific Customer ID from the User table
     public int userId;
+
+    // ✅ FIXED: Added farmerId so Room can track sales and pending counts for each seller!
+    public int farmerId;
 }

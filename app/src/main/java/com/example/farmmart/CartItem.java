@@ -15,16 +15,20 @@ public class CartItem {
     public int quantity;
     public boolean isSelected; // Controls the "Checkmark" logic in your UI
 
-    public CartItem(int productId, String productName, String productPrice, String imagePath, int quantity, boolean isSelected) {
+    // ✅ FIXED: Added farmerId to track which seller gets paid for this item!
+    public int farmerId;
+
+    // ✅ Updated Constructor to accept farmerId
+    public CartItem(int productId, String productName, String productPrice, String imagePath, int quantity, boolean isSelected, int farmerId) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.imagePath = imagePath;
         this.quantity = quantity;
         this.isSelected = isSelected;
+        this.farmerId = farmerId; // Assign the value
     }
 
-    // Optional: Getter for quantity logic
     public int getQuantity() {
         return quantity;
     }

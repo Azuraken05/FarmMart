@@ -25,6 +25,12 @@ public interface ProductDao {
     @Query("SELECT * FROM products WHERE farmerId = :farmerId ORDER BY id DESC")
     List<Product> getProductsByFarmer(int farmerId);
 
+    /**
+     * ✅ Farmer Dashboard feature: Dynamic active inventory counter block
+     */
+    @Query("SELECT COUNT(*) FROM products WHERE farmerId = :farmerId")
+    int getProductCountByFarmer(int farmerId);
+
     // --- General Queries for the Shop (Customer View) ---
     // Customers can see products from ALL farmers combined.
 
