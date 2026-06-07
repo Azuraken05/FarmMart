@@ -13,32 +13,40 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <FrameLayout
-            android:id="@+id/avatar_frame"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/avatar_card_container"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:background="@drawable/nav_background_rounded"
-            android:backgroundTint="#EAE9E4"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp"
+            app:cardPreventCornerOverlap="false"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true">
-            <TextView
-                android:id="@+id/tv_recent_avatar_txt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="MS"
-                android:textStyle="bold"
-                android:textColor="#435334"
-                android:textSize="14sp"/>
-        </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/avatar_frame"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#EAE9E4">
+
+                <TextView
+                    android:id="@+id/tv_recent_avatar_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="MS"
+                    android:textStyle="bold"
+                    android:textColor="#435334"
+                    android:textSize="14sp"/>
+            </FrameLayout>
+        </androidx.cardview.widget.CardView>
 
         <LinearLayout
             android:id="@+id/info_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_toEndOf="@id/avatar_frame"
-            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/avatar_card_container" android:layout_marginStart="12dp"
             android:layout_toStartOf="@+id/tv_recent_status_badge">
 
             <LinearLayout

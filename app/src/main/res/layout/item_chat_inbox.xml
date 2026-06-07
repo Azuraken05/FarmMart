@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp"
+    android:gravity="center_vertical"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- ✅ FIXED: Using a CardView with cardCornerRadius set to exactly HALF of the width/height to force a perfect circle -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="0dp"
+        app:cardPreventCornerOverlap="false">
+
+        <FrameLayout
+            android:id="@+id/layout_inbox_avatar_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#435334"> <!-- FarmMart Green -->
+
+            <TextView
+                android:id="@+id/tv_inbox_avatar_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="P"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </FrameLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Right Side: Text details container -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="16dp">
+
+        <TextView
+            android:id="@+id/tv_inbox_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prince"
+            android:textColor="#141414"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_inbox_last_seen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="last seen at 1:56 AM"
+            android:textColor="#828282"
+            android:textSize="13sp"
+            android:layout_marginTop="2dp" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -13,10 +13,10 @@ import java.util.List;
 
 public class FarmerOrdersAdapter extends RecyclerView.Adapter<FarmerOrdersAdapter.ViewHolder> {
 
-    private Context context;
-    private List<OrderItem> orderList;
-    private OnOrderActionListener listener;
-    private AppDatabase db;
+    private final Context context;
+    private final List<OrderItem> orderList;
+    private final OnOrderActionListener listener;
+    private final AppDatabase db;
 
     public interface OnOrderActionListener {
         void onShipOrderClick(OrderItem orderItem);
@@ -40,49 +40,41 @@ public class FarmerOrdersAdapter extends RecyclerView.Adapter<FarmerOrdersAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         OrderItem order = orderList.get(position);
 
-        // 1. Map standard order detail structures
+        // 1. Map order details using verified layout variables
         holder.tvOrderId.setText("ORD-2026-0" + order.orderId);
         holder.tvOrderTotal.setText(order.productPrice.contains("₱") ? order.productPrice : "₱" + order.productPrice);
         holder.tvItemSummary.setText(order.quantity + "x " + order.productName);
 
-        if (holder.tvOrderItemCount != null) {
-            holder.tvOrderItemCount.setText(order.quantity == 1 ? "1 ITEM" : order.quantity + " ITEMS");
-        }
-
-        // ✅ 2. DYNAMIC PAYMENT METHOD RENDERING: Shows how the buyer paid
         if (holder.tvPaymentMethod != null) {
-            // Checks if paymentMethod variable exists in your item model, otherwise defaults cleanly
-            holder.tvPaymentMethod.setText("Cash on Delivery");
+            holder.tvPaymentMethod.setText("G-CASH PAID");
         }
 
-        // 3. Dynamic Status Badge Text matching layout rules
+        // 2. Dynamic Status Badge Text
         if (holder.tvStatusBadge != null) {
             if ("To Ship".equalsIgnoreCase(order.status)) {
-                holder.tvStatusBadge.setText("PENDING SHIPMENT");
+                holder.tvStatusBadge.setText("Pending");
             } else if ("To Receive".equalsIgnoreCase(order.status)) {
-                holder.tvStatusBadge.setText("TO SHIP");
+                holder.tvStatusBadge.setText("Shipping");
             } else if ("Completed".equalsIgnoreCase(order.status)) {
-                // ✅ MATCHES SCREENSHOT: Displays clean uppercase terminal status title
-                holder.tvStatusBadge.setText("COMPLETED");
+                holder.tvStatusBadge.setText("Completed");
             } else {
-                holder.tvStatusBadge.setText(order.status.toUpperCase());
+                holder.tvStatusBadge.setText(order.status);
             }
         }
 
-        // 4. Dynamic Customer Info Background Threads Lookup
+        // 3. Dynamic Customer Info Thread Lookup
         new Thread(() -> {
             User customer = db.userDao().getUserById(order.userId);
             if (customer != null && holder.itemView.getContext() != null) {
                 ((android.app.Activity) context).runOnUiThread(() -> {
-                    if (holder.tvCustomerName != null) holder.tvCustomerName.setText(customer.name);
-                    if (holder.tvCustomerAddress != null) {
-                        holder.tvCustomerAddress.setText("Completed".equalsIgnoreCase(order.status) ? "Apopong Lanton" : "Mabuhay Rd.");
+                    if (holder.tvCustomerName != null) {
+                        holder.tvCustomerName.setText(customer.name);
                     }
                 });
             }
         }).start();
 
-        // 5. Dynamic Action Button Management Matrix
+        // 4. Action Button Management
         if (holder.btnShipOrder != null) {
             if ("To Ship".equalsIgnoreCase(order.status)) {
                 holder.btnShipOrder.setVisibility(View.VISIBLE);
@@ -90,14 +82,7 @@ public class FarmerOrdersAdapter extends RecyclerView.Adapter<FarmerOrdersAdapte
                 holder.btnShipOrder.setOnClickListener(v -> {
                     if (listener != null) listener.onShipOrderClick(order);
                 });
-            } else if ("To Receive".equalsIgnoreCase(order.status)) {
-                holder.btnShipOrder.setVisibility(View.VISIBLE);
-                holder.btnShipOrder.setText("View Shipping Details");
-                holder.btnShipOrder.setOnClickListener(v -> {
-                    Toast.makeText(context, "Fetching live tracking details for order ORD-2026-0" + order.orderId + "...", Toast.LENGTH_SHORT).show();
-                });
-            } else if ("Completed".equalsIgnoreCase(order.status)) {
-                // ✅ MATCHES SCREENSHOT: Completely hides the button when the order state reaches complete lifecycle closure
+            } else {
                 holder.btnShipOrder.setVisibility(View.GONE);
             }
         }
@@ -109,20 +94,18 @@ public class FarmerOrdersAdapter extends RecyclerView.Adapter<FarmerOrdersAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvOrderId, tvOrderTotal, tvItemSummary, tvStatusBadge, tvOrderItemCount, tvPaymentMethod; // ✅ Added tvPaymentMethod
-        TextView tvCustomerName, tvCustomerAddress;
+        TextView tvOrderId, tvCustomerName, tvItemSummary, tvOrderTotal, tvPaymentMethod, tvStatusBadge;
         Button btnShipOrder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvOrderId = itemView.findViewById(R.id.tv_order_id);
-            tvOrderTotal = itemView.findViewById(R.id.tv_order_total);
-            tvItemSummary = itemView.findViewById(R.id.tv_item_summary);
-            tvStatusBadge = itemView.findViewById(R.id.tv_order_status_badge);
-            tvOrderItemCount = itemView.findViewById(R.id.tv_order_item_count);
-            tvPaymentMethod = itemView.findViewById(R.id.tv_order_payment_method); // ✅ Maps payment layout ID
-            tvCustomerName = itemView.findViewById(R.id.tv_customer_name);
-            tvCustomerAddress = itemView.findViewById(R.id.tv_customer_address);
+            // ✅ FIXED: Mapped IDs to match the exact XML layout structure shown in image_3c0c25.png
+            tvOrderId = itemView.findViewById(R.id.tv_recent_order_id);
+            tvCustomerName = itemView.findViewById(R.id.tv_recent_cust_name);
+            tvItemSummary = itemView.findViewById(R.id.tv_recent_items);
+            tvOrderTotal = itemView.findViewById(R.id.tv_recent_price);
+            tvPaymentMethod = itemView.findViewById(R.id.tv_recent_payment);
+            tvStatusBadge = itemView.findViewById(R.id.tv_recent_status_badge);
             btnShipOrder = itemView.findViewById(R.id.btn_ship_order);
         }
     }

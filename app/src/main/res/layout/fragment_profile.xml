@@ -51,7 +51,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="10 Following  0 Followers"
+                    android:text="0 Following  0 Followers"
                     android:textColor="#BDBDBD"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -76,6 +76,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="My Purchases"
+                    android:textColor="#141414"
                     style="@style/ManropeBold" />
 
                 <LinearLayout
@@ -87,17 +88,17 @@
 
                     <LinearLayout android:id="@+id/btn_to_ship" style="@style/ProfileIconStyle">
                         <ImageView android:layout_width="30dp" android:layout_height="30dp" android:src="@drawable/ship" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="To Ship" android:textSize="11sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="To Ship" android:textColor="#141414" android:textSize="11sp"/>
                     </LinearLayout>
 
                     <LinearLayout android:id="@+id/btn_to_receive" style="@style/ProfileIconStyle">
                         <ImageView android:layout_width="30dp" android:layout_height="30dp" android:src="@drawable/to_receive" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="To Receive" android:textSize="11sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="To Receive" android:textColor="#141414" android:textSize="11sp"/>
                     </LinearLayout>
 
                     <LinearLayout android:id="@+id/btn_completed" style="@style/ProfileIconStyle">
                         <ImageView android:layout_width="30dp" android:layout_height="30dp" android:src="@drawable/rate" />
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Completed" android:textSize="11sp"/>
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Completed" android:textColor="#141414" android:textSize="11sp"/>
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -126,7 +127,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/help" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Help" android:layout_marginStart="15dp" style="@style/ManropeBold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Help" android:textColor="#141414" android:layout_marginStart="15dp" style="@style/ManropeBold"/>
                 </LinearLayout>
 
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
@@ -141,7 +142,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/setting" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Customer Support" android:layout_marginStart="15dp" style="@style/ManropeBold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Customer Support" android:textColor="#141414" android:layout_marginStart="15dp" style="@style/ManropeBold"/>
                 </LinearLayout>
 
                 <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EEEEEE" />
@@ -156,7 +157,7 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
                     <ImageView android:layout_width="24dp" android:layout_height="24dp" android:src="@drawable/menu" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Settings" android:layout_marginStart="15dp" style="@style/ManropeBold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Settings" android:textColor="#141414" android:layout_marginStart="15dp" style="@style/ManropeBold"/>
                 </LinearLayout>
 
             </LinearLayout>

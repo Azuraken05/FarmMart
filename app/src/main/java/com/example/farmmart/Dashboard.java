@@ -38,7 +38,8 @@ public class Dashboard extends AppCompatActivity {
                 // ✅ Now loads your new Shop Fragment
                 selectedFragment = new fragment_shop();
             } else if (itemId == R.id.chat_user) {
-                // selectedFragment = new ChatFragment();
+                // ✅ FIXED & CONNECTED: Uncommented and linked your brand-new shared fragment layout file
+                selectedFragment = new fragment_chat();
             }
 
             if (selectedFragment != null) {

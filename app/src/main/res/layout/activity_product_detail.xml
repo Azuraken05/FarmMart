@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://tools.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <!-- Sticky Header Top Bar Navigation -->
     <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
@@ -24,7 +26,8 @@
             app:tint="#141414"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:contentDescription="Back Navigation Button" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -41,14 +44,16 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:src="@drawable/favorite"
-            app:tint="#141414" />
+            app:tint="#141414"
+            android:contentDescription="Favorite Button" />
     </RelativeLayout>
 
+    <!-- Scrollable Workspace Layout Window Panel -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="60dp"
-        android:paddingBottom="80dp"
+        android:paddingBottom="90dp"
         android:clipToPadding="false">
 
         <LinearLayout
@@ -56,6 +61,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Main Product Image Frame Wrapper -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
@@ -68,9 +74,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
+                    android:src="@drawable/logo"
+                    android:contentDescription="Product Detail Focus Image" />
             </androidx.cardview.widget.CardView>
 
+            <!-- Text Content Context Frame Container -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -96,20 +104,10 @@
                     android:textSize="26sp"
                     android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_detail_desc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="Product description goes here..."
-                    android:textColor="#4F4F4F"
-                    android:textSize="14sp" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:gravity="bottom"
                     android:orientation="horizontal">
 
@@ -131,6 +129,27 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
+                <!-- ✅ ADDED: Explicit "Description" Header Label Field -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:text="Description"
+                    android:textColor="#141414"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_detail_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="Product description goes here..."
+                    android:textColor="#4F4F4F"
+                    android:textSize="14sp" />
+
+                <!-- Incremental Item Quantity Modification Box Frame Layout -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="60dp"
@@ -191,18 +210,26 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btn_add_to_cart_large"
+    <!-- ✅ FIXED: Wrapped inside a smooth CardView with app:cardCornerRadius set to exactly HALF of the height (56dp / 2 = 28dp) to force a perfect rounded capsule layout shape -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="56dp"
         android:layout_gravity="bottom"
         android:layout_margin="20dp"
-        android:background="@drawable/nav_background_rounded"
-        android:backgroundTint="#435334"
-        android:text="Add to Cart"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        app:cardCornerRadius="28dp"
+        app:cardElevation="4dp"
+        app:cardPreventCornerOverlap="false">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_add_to_cart_large"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#435334"
+            android:text="Add to Cart"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

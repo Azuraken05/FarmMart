@@ -24,14 +24,17 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/edittext_roundborder"
             android:hint="Enter product name"
-            android:paddingHorizontal="15dp" />
+            android:textColorHint="#727E6A" android:paddingHorizontal="15dp"
+            android:importantForAutofill="no"
+            android:inputType="text" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Product Image"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#141414" />
 
         <ImageView
             android:id="@+id/img_select_product"
@@ -41,7 +44,8 @@
             android:background="@drawable/edittext_roundborder"
             android:scaleType="centerCrop"
             android:src="@drawable/logo"
-            android:clipToOutline="true"/>
+            android:clipToOutline="true"
+            android:contentDescription="Select product image display box" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,18 +62,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Price"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="#141414" />
                 <EditText
                     android:id="@+id/et_product_price"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/edittext_roundborder"
                     android:inputType="numberDecimal"
                     android:hint="₱ 0.00"
-                    android:paddingHorizontal="15dp" />
+                    android:textColorHint="#727E6A" android:paddingHorizontal="15dp"
+                    android:importantForAutofill="no" />
             </LinearLayout>
 
-            <View android:layout_width="15dp" android:layout_height="1dp" />
+            <View
+                android:layout_width="15dp"
+                android:layout_height="1dp" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -80,15 +89,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Stock"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="#141414" />
                 <EditText
                     android:id="@+id/et_product_stock"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/edittext_roundborder"
                     android:inputType="number"
                     android:hint="Qty"
-                    android:paddingHorizontal="15dp" />
+                    android:textColorHint="#727E6A" android:paddingHorizontal="15dp"
+                    android:importantForAutofill="no" />
             </LinearLayout>
         </LinearLayout>
 
@@ -97,7 +109,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Choose Category"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#141414" />
 
         <Spinner
             android:id="@+id/spinner_category"
@@ -112,7 +125,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
             android:text="Product Description"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="#141414" />
 
         <EditText
             android:id="@+id/et_product_description"
@@ -122,19 +136,22 @@
             android:background="@drawable/edittext_roundborder"
             android:gravity="top"
             android:hint="Describe the product (e.g., origin, freshness, weight)..."
-            android:padding="15dp"
-            android:inputType="textMultiLine" />
+            android:textColorHint="#727E6A" android:padding="15dp"
+            android:inputType="textMultiLine"
+            android:importantForAutofill="no" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_save_product"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:layout_marginTop="30dp"
-            android:background="@drawable/nav_background_rounded"
-            android:backgroundTint="@color/farm_mart_green"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/capsule_button_background"
             android:text="+ ADD PRODUCT"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

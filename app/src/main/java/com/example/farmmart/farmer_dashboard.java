@@ -51,6 +51,12 @@ public class farmer_dashboard extends AppCompatActivity {
                 // ✅ NOW ACTIVE: Loads your Orders fragment with the To Ship, Shipping, and Completed tabs!
                 replaceFragment(new FarmerOrdersFragment());
                 return true;
+
+            } else if (id == R.id.chat_farmer) {
+                // ✅ FIXED & CONNECTED: Added the missing chat ID handler to link up your new universal chat fragment
+                replaceFragment(new fragment_chat());
+                return true;
+
             } else if (id == R.id.profile_farmer) {
                 // Loads your brand-new, standalone ProfileFragment file!
                 replaceFragment(new ProfileFragment());
